@@ -169,8 +169,8 @@ import { ref, reactive, toRaw, onMounted } from "vue";
 import { message } from "ant-design-vue";
 import moment from "moment";
 import "moment/locale/id"; // Import locale Indonesia
-
 moment.locale("id"); // Set locale to Indonesia
+const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
   setup() {
@@ -190,6 +190,14 @@ export default {
       instansi: "",
       jadwal: "",
     });
+    const validateEmail = (email) => {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(String(email).toLowerCase());
+    };
+    const isValidWhatsAppNumber = (number) => {
+      const regex = /^62\d{8,11}$/;
+      return regex.test(number);
+    };
     const rules = {
       name: [{ required: true, message: "Please input Name", trigger: "change" }],
       email: [{ required: true, message: "Please input Email", trigger: "change" }],
@@ -220,8 +228,16 @@ export default {
         Object.keys(errors).forEach((key) => (errors[key] = ""));
 
         if (!form.name) errors.name = "Nama wajib diisi";
-        if (!form.email) errors.email = "Email wajib diisi";
-        if (!form.whatsapp) errors.whatsapp = "Whatsapp wajib diisi";
+        if (!form.email) {
+          errors.email = "Email wajib diisi";
+        } else if (!validateEmail(form.email)) {
+          errors.email = "Email tidak valid";
+        }
+        if (!form.whatsapp) {
+          errors.whatsapp = "Whatsapp wajib diisi";
+        } else if (!isValidWhatsAppNumber(form.whatsapp)) {
+          errors.whatsapp = "Nomor WhatsApp tidak valid. Nomor harus dimulai dengan 62 dan memiliki 10 hingga 13 digit setelah kode negara.";
+        }
         if (!form.instansi) errors.instansi = "Instansi wajib dipilih";
         if (!form.jadwal) errors.jadwal = "Jadwal wajib dipilih";
 
@@ -233,7 +249,7 @@ export default {
 
         if (isEditing.value) {
           const response = await axios.put(
-            `http://localhost:3000/api/users/${form.id}`,
+            `${apiUrl}/api/users/${form.id}`,
             toRaw(form)
           );
           console.log(response.data);
@@ -244,7 +260,7 @@ export default {
           resetForm();
         } else {
           const response = await axios.post(
-            "http://localhost:3000/api/submit",
+            "${apiUrl}/api/submit",
             toRaw(form)
           );
           console.log(response.data);
@@ -264,7 +280,7 @@ export default {
     const bookJadwal = async (jadwalId) => {
       try {
         await axios.post(
-          `http://localhost:3000/api/jadwal/${jadwalId}/book`,
+          `${apiUrl}/api/jadwal/${jadwalId}/book`,
           {},
           {
             headers: {
@@ -280,7 +296,7 @@ export default {
 
     const fetchJadwal = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/jadwal", {
+        const response = await axios.get(`${apiUrl}/api/jadwal`, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -305,7 +321,7 @@ export default {
         sortOrder: sorter.order || "descend",
       };
       try {
-        const response = await axios.get("http://localhost:3000/api/userslist", {
+        const response = await axios.get(`${apiUrl}/api/userslist`, {
           params,
         });
         users.value = response.data;
@@ -319,7 +335,7 @@ export default {
 
     const fetchInstansi = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/instansi");
+        const response = await axios.get(`${apiUrl}/api/instansi`);
         instansiList.value = response.data;
       } catch (error) {
         console.error(error);
@@ -328,7 +344,7 @@ export default {
 
     const fetchInstansifilter = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/instansifilter");
+        const response = await axios.get(`${apiUrl}/api/instansifilter`);
         instansifilterList.value = response.data;
       } catch (error) {
         console.error(error);
@@ -348,7 +364,7 @@ export default {
 
     const handleDelete = async (id) => {
       try {
-        const response = await axios.delete(`http://localhost:3000/api/users/${id}`);
+        const response = await axios.delete(`${apiUrl}/api/users/${id}`);
         console.log(response.data);
         message.success("Data berhasil dihapus");
         fetchUsers();
