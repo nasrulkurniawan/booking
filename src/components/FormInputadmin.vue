@@ -25,6 +25,15 @@
         <a-input v-model:value="form.name" placeholder="Name" />
       </a-form-item>
       <a-form-item
+        ref="nip"
+        label="NIP"
+        name="nip"
+        :validate-status="errors.nip ? 'error' : ''"
+        :help="errors.nip"
+      >
+        <a-input v-model:value="form.nip" placeholder="NIP" />
+      </a-form-item>
+      <a-form-item
         ref="email"
         label="Email"
         name="email"
@@ -178,12 +187,14 @@ export default {
     const form = reactive({
       id: null,
       name: "",
+      nip: "",
       email: "",
       whatsapp: "",
       instansi: null,
     });
     const errors = reactive({
       name: "",
+      nip: "",
       email: "",
       whatsapp: "",
       instansi: "",
@@ -200,6 +211,7 @@ export default {
     const rules = {
       name: [{ required: true, message: "Please input Name", trigger: "change" }],
       email: [{ required: true, message: "Please input Email", trigger: "change" }],
+      nip: [{ required: true, message: "Please input NIP", trigger: "change" }],
       whatsapp: [{ required: true, message: "Please input Whatsapp", trigger: "change" }],
       instansi: [
         { required: true, message: "Please select Instansi", trigger: "change" },
@@ -226,6 +238,7 @@ export default {
         Object.keys(errors).forEach(key => errors[key] = '');
 
         if (!form.name) errors.name = 'Nama wajib diisi';
+        if (!form.nip) errors.nip = 'NIP wajib diisi';
         if (!form.email) {
           errors.email = "Email wajib diisi";
         } else if (!validateEmail(form.email)) {
@@ -391,6 +404,7 @@ export default {
       isEditing.value = true;
       form.id = record.id;
       form.name = record.name;
+      form.nip = record.nip;
       form.email = record.email;
       form.whatsapp = record.whatsapp;
     };
@@ -399,6 +413,7 @@ export default {
       isEditing.value = false;
       form.id = null;
       form.name = "";
+      form.nip = "";
       form.email = "";
       form.whatsapp = "";
       form.instansi = null;
@@ -419,6 +434,12 @@ export default {
         title: "Name",
         dataIndex: "name",
         key: "name",
+        sorter: true,
+      },
+      {
+        title: "NIP",
+        dataIndex: "nip",
+        key: "nip",
         sorter: true,
       },
       {

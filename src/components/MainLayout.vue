@@ -11,11 +11,11 @@
         </a-menu-item>
         <a-menu-item v-if="!isLoggedIn" key="2" @click="navigateTo('/users')">
           <user-outlined />
-          <span>Booking Jadwal</span>
+          <span>Daftar Demo</span>
         </a-menu-item>
         <a-menu-item v-if="isLoggedIn" key="3" @click="navigateTo('/adminjadwal')">
           <user-outlined />
-          <span>Kelola Jadwal</span>
+          <span>Kelola Daftar Demo</span>
         </a-menu-item>
       </a-menu>
     </a-layout-sider>
