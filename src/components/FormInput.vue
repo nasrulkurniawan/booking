@@ -92,7 +92,7 @@
       @cancel="handleCancel"
     >
       <p>
-        Perhatian: Data yang akan Anda simpan tidak dapat diubah lagi. Hanya nama instansi dan tanggal yang akan ditampilkan setelah penyimpanan. Anda hanya memiliki satu kesempatan untuk memilih. Pastikan semua data sudah benar sebelum melanjutkan. Apakah Anda yakin ingin menyimpan dan mengirim data booking integrasi ini? Instansi yang sudah disubmit tidak akan muncul lagi dalam opsi submit.
+        Perhatian: Data yang akan Anda simpan tidak dapat diubah lagi. Hanya nama instansi dan tanggal yang akan ditampilkan setelah penyimpanan. Anda hanya memiliki satu kesempatan untuk memilih. Pastikan semua data sudah benar sebelum melanjutkan. Apakah Anda yakin ingin menyimpan dan mengirim data booking integrasi ini? Instansi yang sudah disubmit tidak akan muncul lagi dalam pilihan instansi.
       </p>
     </a-modal>
 
