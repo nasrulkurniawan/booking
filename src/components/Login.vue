@@ -39,6 +39,7 @@
 <script>
 import axios from 'axios';
 import { message } from 'ant-design-vue';
+const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
   name: 'LoginPage',
@@ -51,9 +52,13 @@ export default {
   methods: {
     async handleSubmit() {
       try {
-        const response = await axios.post('http://localhost:3000/api/login', {
+        const response = await axios.post(`${apiUrl}/api/login`, {
           username: this.username,
           password: this.password,
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
         });
         localStorage.setItem('token', response.data.token);
         this.$router.push('/adminjadwal');

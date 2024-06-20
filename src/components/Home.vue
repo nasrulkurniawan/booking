@@ -28,6 +28,7 @@
 <script>
 import axios from "axios";
 import { Card, Row, Col, Typography } from 'ant-design-vue';
+const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
   name: "HomePage",
@@ -52,7 +53,7 @@ export default {
   methods: {
     async fetchStats() {
       try {
-        const response = await axios.get("http://localhost:3000/api/stats");
+        const response = await axios.get(`${apiUrl}/api/stats`);
         this.stats = response.data;
       } catch (error) {
         console.error("Failed to fetch stats:", error);
