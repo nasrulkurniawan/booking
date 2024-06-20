@@ -1,7 +1,7 @@
 <template>
   <div>
     <a-form
-      @submit.prevent="handleSubmit"
+      @submit.prevent="showConfirmModal"
       class="login-form"
       :label-col="{ span: 5 }"
       :wrapper-col="{ span: 13 }"
@@ -85,14 +85,18 @@
       </a-form-item>
     </a-form>
 
+    <a-modal
+      title="Konfirmasi Penyimpanan"
+      v-model:visible="confirmVisible"
+      @ok="handleSubmit"
+      @cancel="handleCancel"
+    >
+      <p>
+        Perhatian: Data yang akan Anda simpan tidak dapat diubah lagi. Hanya nama instansi dan tanggal yang akan ditampilkan setelah penyimpanan. Anda hanya memiliki satu kesempatan untuk memilih. Pastikan semua data sudah benar sebelum melanjutkan. Apakah Anda yakin ingin menyimpan dan mengirim data booking integrasi ini? Instansi yang sudah disubmit tidak akan muncul lagi dalam opsi submit.
+      </p>
+    </a-modal>
+
     <a-row type="flex" justify="space-between" style="margin-bottom: 16px">
-      <!-- <a-col>
-        <a-input-search
-          v-model:value="search"
-          placeholder="Search by name or email"
-          @search="fetchUsers"
-        />
-      </a-col> -->
       <a-col>
         <a-col>
           <a-select
@@ -114,37 +118,19 @@
         </a-col>
       </a-col>
       <a-col>
-          <a-select
-            v-model="pagination.pageSize"
-            @change="handlePageSizeChange"
-            style="width: 120px"
-          >
-            <a-select-option value="5">5</a-select-option>
-            <a-select-option value="10">10</a-select-option>
-            <a-select-option value="20">20</a-select-option>
-            <a-select-option value="50">50</a-select-option>
-            <a-select-option value="100">100</a-select-option>
-          </a-select>
-        </a-col>
+        <a-select
+          v-model="pagination.pageSize"
+          @change="handlePageSizeChange"
+          style="width: 120px"
+        >
+          <a-select-option value="5">5</a-select-option>
+          <a-select-option value="10">10</a-select-option>
+          <a-select-option value="20">20</a-select-option>
+          <a-select-option value="50">50</a-select-option>
+          <a-select-option value="100">100</a-select-option>
+        </a-select>
+      </a-col>
     </a-row>
-
-    <!-- Filter Instansi Dropdown -->
-    <!-- <a-row type="flex" justify="space-between" style="margin-bottom: 16px;">
-        <a-col>
-          <a-select
-            v-model="selectedInstansi"
-            placeholder="Filter by Instansi"
-            show-search
-            :filter-option="filterInstansi"
-            @change="handleInstansiFilterChange"
-            style="width: 200px;"
-          >
-            <a-select-option v-for="instansi in instansiList" :key="instansi.id" :value="instansi.id">
-              {{ instansi.name }}
-            </a-select-option>
-          </a-select>
-        </a-col>
-      </a-row> -->
 
     <a-spin size="large" :spinning="loading">
       <a-table
@@ -169,7 +155,9 @@ import { ref, reactive, toRaw, onMounted } from "vue";
 import { message } from "ant-design-vue";
 import moment from "moment";
 import "moment/locale/id"; // Import locale Indonesia
+
 moment.locale("id"); // Set locale to Indonesia
+
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
@@ -183,6 +171,7 @@ export default {
       instansi: null,
       jadwal: null,
     });
+    const confirmVisible = ref(false);
     const errors = reactive({
       name: "",
       email: "",
@@ -222,7 +211,17 @@ export default {
     const errorMessage = ref(false);
     const loading = ref(false);
 
+    const showConfirmModal = () => {
+      confirmVisible.value = true;
+    };
+
+    const handleCancel = () => {
+      confirmVisible.value = false;
+    };
+
     const handleSubmit = async () => {
+      confirmVisible.value = false; // Hide the modal
+
       try {
         // Reset errors
         Object.keys(errors).forEach((key) => (errors[key] = ""));
@@ -260,7 +259,7 @@ export default {
           resetForm();
         } else {
           const response = await axios.post(
-            "${apiUrl}/api/submit",
+            `${apiUrl}/api/submit`,
             toRaw(form)
           );
           console.log(response.data);
@@ -442,7 +441,9 @@ export default {
       jadwalOptions,
       errorMessage,
       loading,
+      showConfirmModal,
       handleSubmit,
+      handleCancel,
       fetchUsers,
       fetchInstansi,
       fetchInstansifilter,
@@ -455,6 +456,7 @@ export default {
       filterInstansi,
       handleInstansiFilterChange, // Add this to the returned object
       columns,
+      confirmVisible
     };
   },
 };
