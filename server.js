@@ -7,9 +7,14 @@ const app = express();
 const port = 3000;
 
 app.use(bodyParser.json());
+
 app.use(cors({
-    exposedHeaders: ['x-total-count']
+  origin: '*', // Anda bisa mengganti '*' dengan domain spesifik seperti 'http://localhost:8080'
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['x-total-count']
 }));
+
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');

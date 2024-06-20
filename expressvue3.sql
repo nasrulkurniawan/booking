@@ -273,7 +273,7 @@ CREATE TABLE IF NOT EXISTS `jadwal` (
   `status` enum('available','booked') DEFAULT 'available',
   `used_count` int DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `jadwal`

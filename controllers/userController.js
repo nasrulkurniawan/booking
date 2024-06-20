@@ -28,12 +28,13 @@ exports.getStats = (req, res) => {
 };
 
 exports.submit = (req, res) => {
-  const { name, email, whatsapp, instansi, jadwal } = req.body;
+  const { name, nip, email, whatsapp, instansi, jadwal } = req.body;
 
   // Validasi field
   let errors = {};
   if (!name) errors.name = 'Nama wajib diisi';
   if (!email) errors.email = 'Email wajib diisi';
+  if (!nip) errors.nip = 'NIP wajib diisi';
   if (!whatsapp) errors.whatsapp = 'Whatsapp wajib diisi';
   if (!instansi) errors.instansi = 'Instansi wajib dipilih';
   if (!jadwal) errors.jadwal = 'Jadwal wajib dipilih';
@@ -52,7 +53,7 @@ exports.submit = (req, res) => {
     }
 
     // Jika belum ada, lanjutkan untuk menyimpan data
-    let data = { name, email, whatsapp, instansi_id: instansi, tanggal: jadwal };
+    let data = { name, nip, email, whatsapp, instansi_id: instansi, tanggal: jadwal };
     let sql = 'INSERT INTO users SET ?';
     let query = db.query(sql, data, (err, result) => {
       if (err) throw err;
@@ -73,11 +74,12 @@ exports.submit = (req, res) => {
 };
 
 exports.updateUser = (req, res) => {
-  const { name, email, whatsapp, instansi, jadwal } = req.body;
+  const { name, nip, email, whatsapp, instansi, jadwal } = req.body;
 
   // Validate fields
   let errors = {};
   if (!name) errors.name = 'Name is required';
+  if (!nip) errors.nip = 'NIP is required';
   if (!email) errors.email = 'Email is required';
   if (!whatsapp) errors.whatsapp = 'Whatsapp is required';
   if (!instansi) errors.instansi = 'Instansi is required';
@@ -107,7 +109,7 @@ exports.updateUser = (req, res) => {
         if (err) throw err;
 
         // Now update the user data
-        let data = { name, email, whatsapp, instansi_id: instansi, tanggal: jadwal };
+        let data = { name, nip, email, whatsapp, instansi_id: instansi, tanggal: jadwal };
         let updateUserSql = 'UPDATE users SET ? WHERE id = ?';
         db.query(updateUserSql, [data, id], (err, result) => {
           if (err) throw err;
